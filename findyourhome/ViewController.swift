@@ -14,7 +14,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.delegate = self
         tableView.dataSource = self
         
-        self.get_data("http://findyourhome.se:2932/api")
+        self.get_data("http://findyourhome.se:2932/api?apikey=64c742decaeb5914660a8b071d282b50")
     }
     
     func get_data(_ link: String) {
@@ -53,7 +53,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
+        //let concurrentQueue = DispatchQueue(label: "com.queue.Concurrent", attributes: .concurrent)
+        
         for i in 0 ..< data_array.count {
+            //concurrentQueue.sync {
                 if let data_object = data_array[i] as? NSDictionary {
                     if let data_link = data_object["id"] as? String,
                         let data_address = data_object["addess"] as? String,
@@ -62,19 +65,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                         let data_imageUrl = data_object["imageUrl"] as? String
                         
                     {
+                        let pictureURL = URL(string: data_imageUrl)!
                         let date = dateFormatter.date(from: data_publishedDate)!
                         let price = Int(data_price)!
-                        self.listings.append(Listing(data_link, data_address, price, date, data_imageUrl))
-                        
+                        let imageData = try! Data(contentsOf: pictureURL)
+                        let fetchedImage = UIImage(data: imageData)!
+                        self.listings.append(Listing(data_link, data_address, price, date, fetchedImage))
                     }
                     
                 }
-            
+            //}
         }
         
+        
         print("data fetch done, sorting and then refreshing..")
+
         // sort data by date
-        self.listings.sort { $0.publishedDate > $1.publishedDate }
+        /*
+        * CHANGE DIRECTION OF < to: >
+        */
+        self.listings.sort { $0.publishedDate < $1.publishedDate }
+        
         self.refresh_now()
     }
     
@@ -90,6 +101,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // number of rows in table view
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("NUM OF ROWS: \(self.listings.count)")
         return self.listings.count
     }
     
@@ -100,11 +112,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         //cell.link.text = self.listings[indexPath.row].link
         cell.address.text = self.listings[indexPath.row].address
-        cell.price.text = "\(self.listings[indexPath.row].price)"
+        cell.price.text = "\(self.listings[indexPath.row].price) / month"
         let dateString = "\(self.listings[indexPath.row].publishedDate)"
         let index = dateString.index(dateString.startIndex, offsetBy: 10)
         cell.publishedDate.text = dateString.substring(to: index)
-        cell.imageUrl.text = self.listings[indexPath.row].imageUrl
+        cell.listingImage.image = self.listings[indexPath.row].listingImage
+        
+        print("ROW CELL: \(indexPath.row)")
         
         
         return cell

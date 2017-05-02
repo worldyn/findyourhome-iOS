@@ -15,8 +15,7 @@ class ListingDetailViewController: UIViewController {
     @IBOutlet weak var price: UILabel!
     @IBOutlet weak var publishedDate: UILabel!
     @IBOutlet weak var link: UILabel!
-    @IBOutlet weak var imageUrl: UILabel!
-    
+    @IBOutlet weak var listingImage: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +24,7 @@ class ListingDetailViewController: UIViewController {
         price.text = "\(listing!.price)"
         publishedDate.text = "\(listing!.publishedDate)"
         link.text = listing!.link
-        imageUrl.text = listing!.imageUrl
+        listingImage.image = listing!.listingImage
     }
 
     override func didReceiveMemoryWarning() {

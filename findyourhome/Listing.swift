@@ -7,19 +7,20 @@
 //
 
 import Foundation
+import UIKit
 
 class Listing {
     var link: String
     var address: String
     var price: Int
     var publishedDate: Date
-    var imageUrl: String
+    var listingImage: UIImage?
     
-    init(_ link: String, _ address: String, _ price: Int, _ publishedDate: Date, _ imageUrl: String) {
+    init(_ link: String, _ address: String, _ price: Int, _ publishedDate: Date, _ listingImage: UIImage?) {
         self.link = link
         self.address = address
         self.price = price
         self.publishedDate = publishedDate
-        self.imageUrl = imageUrl
+        self.listingImage = listingImage
     }
 }
