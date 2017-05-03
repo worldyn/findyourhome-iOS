@@ -14,7 +14,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.delegate = self
         tableView.dataSource = self
         
-        self.get_data("http://findyourhome.se:2932/api?apikey=64c742decaeb5914660a8b071d282b50")
+        self.get_data("http://findyourhome.se:2932/api?apikey=aKwo4vIzpEKSeE70kQG7yQoLAfHV2lPo")
     }
     
     func get_data(_ link: String) {
