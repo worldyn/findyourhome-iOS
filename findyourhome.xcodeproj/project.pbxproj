@@ -10,6 +10,8 @@
 		270E328D7E3E096865A51BAC /* Pods_findyourhome.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 910443213EFEF20AC8DED7E9 /* Pods_findyourhome.framework */; };
 		40F70A349FCB926098149F78 /* Pods_findyourhomeTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 878527D3BA00D83101A52009 /* Pods_findyourhomeTests.framework */; };
 		55502A451EB2408E000C9F4B /* ListingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55502A441EB2408E000C9F4B /* ListingDetailViewController.swift */; };
+		556AE2331EBE1C82002BDAB7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 556AE2321EBE1C82002BDAB7 /* MapKit.framework */; };
+		556AE2361EBE1EAE002BDAB7 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 556AE2351EBE1EAE002BDAB7 /* UserNotifications.framework */; };
 		558ECBA01EAFAC9400E7ED91 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558ECB9F1EAFAC9400E7ED91 /* AppDelegate.swift */; };
 		558ECBA21EAFAC9400E7ED91 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558ECBA11EAFAC9400E7ED91 /* ViewController.swift */; };
 		558ECBA51EAFAC9400E7ED91 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 558ECBA31EAFAC9400E7ED91 /* Main.storyboard */; };
@@ -42,6 +44,9 @@
 /* Begin PBXFileReference section */
 		255E5CC0ED48348BFEC9FBA4 /* Pods_findyourhomeUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_findyourhomeUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		55502A441EB2408E000C9F4B /* ListingDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListingDetailViewController.swift; sourceTree = "<group>"; };
+		556AE2321EBE1C82002BDAB7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		556AE2341EBE1CD1002BDAB7 /* findyourhome.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = findyourhome.entitlements; sourceTree = "<group>"; };
+		556AE2351EBE1EAE002BDAB7 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		558ECB9C1EAFAC9400E7ED91 /* findyourhome.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = findyourhome.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		558ECB9F1EAFAC9400E7ED91 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		558ECBA11EAFAC9400E7ED91 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -72,6 +77,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				556AE2361EBE1EAE002BDAB7 /* UserNotifications.framework in Frameworks */,
+				556AE2331EBE1C82002BDAB7 /* MapKit.framework in Frameworks */,
 				270E328D7E3E096865A51BAC /* Pods_findyourhome.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -146,6 +153,7 @@
 		558ECB9E1EAFAC9400E7ED91 /* findyourhome */ = {
 			isa = PBXGroup;
 			children = (
+				556AE2341EBE1CD1002BDAB7 /* findyourhome.entitlements */,
 				55502A431EB23F21000C9F4B /* Model */,
 				55502A421EB23F10000C9F4B /* Controllers */,
 				55502A411EB23EE9000C9F4B /* View */,
@@ -191,6 +199,8 @@
 		CAF392ACD1E6ABD44098E6D6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				556AE2351EBE1EAE002BDAB7 /* UserNotifications.framework */,
+				556AE2321EBE1C82002BDAB7 /* MapKit.framework */,
 				910443213EFEF20AC8DED7E9 /* Pods_findyourhome.framework */,
 				878527D3BA00D83101A52009 /* Pods_findyourhomeTests.framework */,
 				255E5CC0ED48348BFEC9FBA4 /* Pods_findyourhomeUITests.framework */,
@@ -275,8 +285,16 @@
 				TargetAttributes = {
 					558ECB9B1EAFAC9400E7ED91 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = H95GA8Q4Y4;
+						DevelopmentTeam = LKE8625923;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 0;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					558ECBAF1EAFAC9400E7ED91 = {
 						CreatedOnToolsVersion = 8.0;
@@ -641,10 +659,11 @@
 			baseConfigurationReference = 75359412B3CA7DB250420B91 /* Pods-findyourhome.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = H95GA8Q4Y4;
+				CODE_SIGN_ENTITLEMENTS = findyourhome/findyourhome.entitlements;
+				DEVELOPMENT_TEAM = LKE8625923;
 				INFOPLIST_FILE = findyourhome/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.fyh.findyourhome;
+				PRODUCT_BUNDLE_IDENTIFIER = com.worldyn.findyourhome;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -655,10 +674,11 @@
 			baseConfigurationReference = 9F414AFA836084F8ED47FF77 /* Pods-findyourhome.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = H95GA8Q4Y4;
+				CODE_SIGN_ENTITLEMENTS = findyourhome/findyourhome.entitlements;
+				DEVELOPMENT_TEAM = LKE8625923;
 				INFOPLIST_FILE = findyourhome/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.fyh.findyourhome;
+				PRODUCT_BUNDLE_IDENTIFIER = com.worldyn.findyourhome;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};

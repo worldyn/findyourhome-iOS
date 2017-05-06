@@ -1,23 +1,35 @@
 import UIKit
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    // Listings that will be shown in table view
     var listings:[Listing] = [Listing]()
     
-    // Don't forget to enter this in IB also
-    let cellReuseIdentifier = "cell"
+    // Spinner view
+    var activityIndicatorView: UIActivityIndicatorView!
     
+    let cellReuseIdentifier = "cell"
     @IBOutlet var tableView: UITableView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
+        tableView.backgroundView = activityIndicatorView
+        
         tableView.delegate = self
         tableView.dataSource = self
         
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.none
+        activityIndicatorView.startAnimating()
+        // Initially fetch all listings
         self.get_data("http://findyourhome.se:2932/api?apikey=aKwo4vIzpEKSeE70kQG7yQoLAfHV2lPo")
+        
     }
     
+    
     func get_data(_ link: String) {
+        
         let url:URL = URL(string: link)!
         let session = URLSession.shared
         
@@ -27,6 +39,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.extract_data(data)
         })
         task.resume()
+        
+        print("task resume")
 
     }
     
@@ -50,13 +64,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             return
         }
         
+        // Date formater used to change listings date into right format
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
-        //let concurrentQueue = DispatchQueue(label: "com.queue.Concurrent", attributes: .concurrent)
+        // Concurrently add all listings to self.listing array
+        let concurrentQueue = DispatchQueue(label: "com.queue.Concurrent", attributes: .concurrent)
         
         for i in 0 ..< data_array.count {
-            //concurrentQueue.sync {
+            concurrentQueue.sync {
                 if let data_object = data_array[i] as? NSDictionary {
                     if let data_link = data_object["id"] as? String,
                         let data_address = data_object["addess"] as? String,
@@ -74,26 +90,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     }
                     
                 }
-            //}
+            }
         }
         
         
         print("data fetch done, sorting and then refreshing..")
 
         // sort data by date
-        /*
-        * CHANGE DIRECTION OF < to: >
-        */
-        self.listings.sort { $0.publishedDate < $1.publishedDate }
+        self.listings.sort { $0.publishedDate > $1.publishedDate }
+        print(self.listings.count);
+        
         
         self.refresh_now()
     }
     
     func refresh_now() {
         print("refreshing..")
+        
+        // Refresh table view without blocking
         DispatchQueue.main.async(
             execute:
             {
+                self.tableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
+                self.activityIndicatorView.stopAnimating()
                 self.tableView.reloadData()
             }
         )
@@ -101,7 +120,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // number of rows in table view
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("NUM OF ROWS: \(self.listings.count)")
         return self.listings.count
     }
     
@@ -118,13 +136,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.publishedDate.text = dateString.substring(to: index)
         cell.listingImage.image = self.listings[indexPath.row].listingImage
         
-        print("ROW CELL: \(indexPath.row)")
-        
         
         return cell
     }
     
-    // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("You tapped cell number \(indexPath.row).")
     }
@@ -136,7 +151,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
      // MARK: - Navigation
-    
      override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
         
