@@ -36,7 +36,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         else {  
             application.registerForRemoteNotifications(matching: [.badge, .sound, .alert])
         }
-        
         return true
     }
     
