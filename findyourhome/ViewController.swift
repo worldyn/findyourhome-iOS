@@ -26,6 +26,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // Starts as nil but is set when listigns are fetched
     var seqNumber: Int? = nil
     
+    /**
+    * ViewDidLoad: What will happen when the view is initially loaded.
+    * Sets up all important components
+    **/
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -44,10 +48,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     */
     
     // Update seqNumber via the oldest one from a slice of the listings arr
-    func sequenceNumberUpdate(listingsSlice listingsSlice: [Listing]) {
-        let count: Int = listingsSlice.count
+    func sequenceNumberUpdate(listingsSlice listings: [Listing]) {
+        let count: Int = listings.count
         if count > 0 {
-            self.seqNumber = listingsSlice[count - 1].seqNumber
+            self.seqNumber = listings[count - 1].seqNumber
             print(self.seqNumber)
         }
     }
@@ -55,6 +59,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     /*
      * MARK - Refreshing and spinner ui methods
      */
+    
+    // CLicked on latest btn
+    @IBAction func clickLatest(_ sender: UIButton) {
+        getLatestListingsIntoTableView()
+    }
+    
+    // clicked on wishes btn, get listings saved as wish from local db
+    @IBAction func getWishes(_ sender: AnyObject) {
+        
+    }
     
     func stopRefresherAndUpdateTitle() {
         // update "last updated" title for refresh control
@@ -97,7 +111,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // Date today
         self.dateFormatter.dateFormat = "yyyy-MM-dd"
         let now = self.dateFormatter.string(from: Date())
-        self.listings = [Listing]()
+        
         // Fetch later or equal to the current date with count equal to 10
         prepareListingRequest("http://findyourhome.se:2932/api?apikey=aKwo4vIzpEKSeE70kQG7yQoLAfHV2lPo&datefilter=lte:\(now)&count=10")
     }
@@ -204,6 +218,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         tableView.separatorInset = .zero
         tableView.layoutMargins = .zero
+        tableView.separatorStyle = .none
         
         // Add to Table View
         if #available(iOS 10.0, *) {
