@@ -43,11 +43,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     * MARK - Class fields' methods and operations
     */
     
-    // Update seqNumber via the oldest one in an empty listings arr
-    func sequenceNumberUpdate() {
-        let count: Int = self.listings.count
+    // Update seqNumber via the oldest one from a slice of the listings arr
+    func sequenceNumberUpdate(listingsSlice listingsSlice: [Listing]) {
+        let count: Int = listingsSlice.count
         if count > 0 {
-            self.seqNumber = self.listings[count - 1].seqNumber
+            self.seqNumber = listingsSlice[count - 1].seqNumber
             print(self.seqNumber)
         }
     }
@@ -143,7 +143,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         self.dateFormatter.dateFormat = "yyyy-MM-dd"
         
+        // Add concurrently to array, sort, and append to self.listings
+        // Adds data to a slice of listings since they need to be sorted seperately
         let concurrentQueue = DispatchQueue(label: "com.queue.Concurrent", attributes: .concurrent)
+        var listingsDataArr: [Listing] = [Listing]()
         
         for i in 0 ..< data_array.count {
             concurrentQueue.sync {
@@ -166,19 +169,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                         let price = Int(data_price)!
                         let imageData = try! Data(contentsOf: pictureURL)
                         let fetchedImage = UIImage(data: imageData)!
-                        self.listings.append(Listing(data_link, data_address, price, date, fetchedImage, data_contract, data_area, data_size, data_seqNumber))
+                        listingsDataArr.append(Listing(data_link, data_address, price, date, fetchedImage, data_contract, data_area, data_size, data_seqNumber))
                     }
                     
                 }
             }
         }
         
-        self.sequenceNumberUpdate()
+        self.sequenceNumberUpdate(listingsSlice: listingsDataArr)
         
         print("data fetch done, sorting and then refreshing..")
         
         // sort data by date
-        self.listings.sort { $0.publishedDate > $1.publishedDate }
+        listingsDataArr.sort { $0.publishedDate > $1.publishedDate }
+        
+        // add the slice of listigns to the real listings array that is shown in table view
+        self.listings += listingsDataArr
         
         print("refreshing..")
         
@@ -218,8 +224,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             // handle your logic here to get more items, add it to dataSource and reload tableview
             print("Bottom Of TABLE!")
             let seq = self.seqNumber
-            if seq != nil && seq! > 0 {
+            if seq != nil && seq! > 1 {
                 addListingsToBottom()
+            } else {
+                print("No more listings...")
             }
         }
     }
